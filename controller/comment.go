@@ -5,7 +5,7 @@ import (
 )
 
 func Comment(c *gin.Context) {
-
+	
 } //对文章进行评论，需要指明ID，同时将该评论附上ID,且留下邮箱
 
 func JundgeEmail(c *gin.Context) {

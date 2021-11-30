@@ -1,11 +1,14 @@
 package controller
 
 import (
+	"Test/model"
+
 	"github.com/gin-gonic/gin"
 )
 
 func UploadArticle(c *gin.Context) {
-
+	article := model.ArticleInfo{}
+	model.SaveArtical(article)
 } //上传文章
 
 func GetArticleByID(c *gin.Context) {
