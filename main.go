@@ -19,6 +19,7 @@ func main() {
 
 		bGroup.POST("/post/atricle", controller.UploadArticle)
 		bGroup.POST("/post/comment", controller.UploadComment)
+		bGroup.POST("/post/reply", controller.ReplyComment)
 	}
 	r.Run()
 	defer mySqldb.MySqlDb.Close()

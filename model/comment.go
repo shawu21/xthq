@@ -17,6 +17,12 @@ func SaveComment(Comment CommentInfo) {
 	db.Create(&Comment)
 } //在数据库里保存评论
 
+func FindReply(ID int) []ReplyInfo {
+	var replys []ReplyInfo
+	db.Where("ReplyCommentId = ?", ID).Find(&replys)
+	return replys
+} //返回对应commentid的回复切片
+
 func SaveReply(Reply ReplyInfo) {
 	db.AutoMigrate(&ReplyInfo{})
 	db.Create(&Reply)

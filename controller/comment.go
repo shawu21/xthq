@@ -39,7 +39,7 @@ func ReplyComment(c *gin.Context) {
 } //对评论进行回复，需要指明评论的ID，同时发送邮件告诉对方有人回复
 
 func GetComment(c *gin.Context) {
-	ID := c.Query("id")
+	ID := c.Query("id") //ID为文章ID
 	Id, _ := strconv.Atoi(ID)
 	comments := model.FindComment(Id)
 	c.JSON(http.StatusOK, gin.H{
@@ -47,5 +47,9 @@ func GetComment(c *gin.Context) {
 	})
 	for _, a := range comments {
 		fmt.Println(a.CommentID, a.Content)
+		replys := model.FindReply(a.CommentID)
+		for _, b := range replys {
+			fmt.Println("   ", b.ReplyID, b.Content)
+		}
 	}
-} //查询评论
+} //查询评论并同时返回回复
