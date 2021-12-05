@@ -1,11 +1,7 @@
 package model
 
-import (
-	"fmt"
-)
-
 type ArticleInfo struct {
-	ID       int
+	ID       int `gorm:"PRIMARY_KEY;AUTO_INCREMENT"`
 	Content  string
 	Category string
 	Tag      string
@@ -25,7 +21,7 @@ type ReplyInfo struct {
 }
 
 func SaveArtical(Article ArticleInfo) {
-	db.AutoMigrate(&ArticleInfo{})
+	db.AutoMigrate(&Article)
 	db.Create(&Article)
 } //在数据库里保存文章
 
@@ -35,18 +31,14 @@ func FindArtical(ID int) string {
 	return ArtiCal.Content
 } //查找数据库里对应ID的文章
 
-func FindArticalIDbyCate(cate string) {
-	var ArtiCal []ArticleInfo
-	db.Where("Category = ?", cate).Find(&ArtiCal)
-	for _, a := range ArtiCal {
-		fmt.Println(a.ID)
-	}
+func FindArticalIDbyCate(cate string) []ArticleInfo {
+	var ArtiCals []ArticleInfo
+	db.Where("Category = ?", cate).Find(&ArtiCals)
+	return ArtiCals
 } //查找数据库里对应category的文章，输出ID
 
-func FindArticalIDbytag(tag string) {
-	var ArtiCal []ArticleInfo
-	db.Where("Tag = ?", tag).Find(&ArtiCal)
-	for _, a := range ArtiCal {
-		fmt.Println(a.ID)
-	}
+func FindArticalIDbytag(tag string) []ArticleInfo {
+	var ArtiCals []ArticleInfo
+	db.Where("Tag = ?", tag).Find(&ArtiCals)
+	return ArtiCals
 } //查找数据库里对应tag的文章，输出ID

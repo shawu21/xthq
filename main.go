@@ -11,8 +11,12 @@ func main() {
 	r := gin.Default()
 	bGroup := r.Group("bolog")
 	{
-		bGroup.GET("/get/article", controller.GetArticleByID)
+		bGroup.GET("/get/articleid", controller.GetArticleByID)
+		bGroup.GET("/get/articletag", controller.GetArticleByTag)
+		bGroup.GET("/get/articlecategory", controller.GetArticleByCategory)
+
 		bGroup.GET("/get/comment", controller.GetComment)
+
 		bGroup.POST("/post/atricle", controller.UploadArticle)
 		bGroup.POST("/post/comment", controller.UploadComment)
 	}

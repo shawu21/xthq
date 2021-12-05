@@ -1,10 +1,16 @@
 package model
 
-func FindComment(ID int) string {
-	var ComMent CommentInfo
-	db.Where("ReplyArticalId = ?", ID).Find(&ComMent)
-	return ComMent.Content
+func FindComment(ID int) []CommentInfo {
+	var ComMents []CommentInfo
+	db.Where("ReplyArticalId = ?", ID).Find(&ComMents)
+	return ComMents
 } //查找数据里对应ID的评论
+
+func FindCommentEmail(ID int) string {
+	var comment CommentInfo
+	db.Where("CommentID = ?", ID).Find(&comment)
+	return comment.Email
+}
 
 func SaveComment(Comment CommentInfo) {
 	db.AutoMigrate(&CommentInfo{})
