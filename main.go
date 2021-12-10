@@ -15,9 +15,10 @@ func main() {
 		bGroup.GET("/get/articletag", controller.GetArticleByTag)
 		bGroup.GET("/get/articlecategory", controller.GetArticleByCategory)
 
-		bGroup.GET("/get/comment", controller.GetComment)
+		bGroup.GET("/get/comments", controller.GetComment)
+		bGroup.GET("/get/comment", controller.GetCommentByID)
 
-		bGroup.POST("/post/atricle", controller.UploadArticle)
+		bGroup.POST("/post/article", controller.UploadArticle)
 		bGroup.POST("/post/comment", controller.UploadComment)
 		bGroup.POST("/post/reply", controller.ReplyComment)
 	}

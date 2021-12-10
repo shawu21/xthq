@@ -15,8 +15,8 @@ func SendEamil(EmailAddress string) {
 
 	m.SetAddressHeader("From", mailConfig["username"].(string), "lxtbolog")
 	m.SetHeader("To", EmailAddress)
-	m.SetHeader("Subject", "你已回复")
-	m.SetBody("text/html", "回复成功")
+	m.SetHeader("Subject", "评论回复")
+	m.SetBody("text/html", "有人回复了你的评论")
 	send := gomail.NewDialer(mailConfig["host"].(string), mailConfig["port"].(int), mailConfig["username"].(string), mailConfig["password"].(string))
 	err := send.DialAndSend(m)
 	if err != nil {

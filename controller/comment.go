@@ -2,7 +2,6 @@ package controller
 
 import (
 	"Test/model"
-	"fmt"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -12,26 +11,39 @@ import (
 
 func UploadComment(c *gin.Context) {
 	var comment model.CommentInfo
-	comment.Content = c.Query("content")
-	comment.Email = c.Query("email")
-	replyid := c.Query("replyid")
+	comment.Content = c.PostForm("content")
+	comment.Email = c.PostForm("email")
+	replyid := c.PostForm("replyid")
 	comment.ReplyArticalId, _ = strconv.Atoi(replyid)
-	model.SaveComment(comment)
-} //对文章进行评论，需要指明ID，同时将该评论附上ID,且留下邮箱
-
-func JundgeEmail(email string) {
-	result, _ := regexp.MatchString(`^([\w\.\_\-]{2,10})@(\w{1,}).([a-z]{2,4})$`, email)
-	if result {
+	if Jundgeemail(comment.Email) {
+		model.SaveComment(comment)
+		c.JSON(http.StatusOK, gin.H{
+			"content": comment.Content,
+			"comment": "upload success",
+		})
 		//邮箱正确
 	} else {
-		//邮箱不正确
+		c.JSON(http.StatusOK, gin.H{
+			"error": "email is not exist",
+		}) //邮箱不正确
 	}
+} //对文章进行评论，需要指明ID，同时将该评论附上ID,且留下邮箱
+
+func JundgeEmail(email string) bool {
+	result, _ := regexp.MatchString(`^([\w\.\_\-]{2,10})@(\w{1,}).([a-z]{2,4})$`, email)
+	return result
 } //判断邮箱是否存在
+
+func Jundgeemail(email string) bool {
+	pattern := `\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*`
+	reg := regexp.MustCompile(pattern)
+	return reg.MatchString(email)
+}
 
 func ReplyComment(c *gin.Context) {
 	var reply model.ReplyInfo
-	reply.Content = c.Query("content")
-	id := c.Query("replycommentid")
+	reply.Content = c.PostForm("content")
+	id := c.PostForm("id") //id为要回复的评论的id
 	reply.ReplyCommentId, _ = strconv.Atoi(id)
 	email := model.FindCommentEmail(reply.ReplyCommentId)
 	model.SaveReply(reply)
@@ -42,14 +54,12 @@ func GetComment(c *gin.Context) {
 	ID := c.Query("id") //ID为文章ID
 	Id, _ := strconv.Atoi(ID)
 	comments := model.FindComment(Id)
-	c.JSON(http.StatusOK, gin.H{
-		"this is the comments about": Id,
-	})
-	for _, a := range comments {
-		fmt.Println(a.CommentID, a.Content)
-		replys := model.FindReply(a.CommentID)
-		for _, b := range replys {
-			fmt.Println("   ", b.ReplyID, b.Content)
-		}
-	}
+	c.JSON(http.StatusOK, model.ApiReturn(comments.Msg, comments.Data))
 } //查询评论并同时返回回复
+
+func GetCommentByID(c *gin.Context) {
+	ID := c.Query("id")
+	Id, _ := strconv.Atoi(ID)
+	comment := model.FindCommentByID(Id)
+	c.JSON(http.StatusOK, model.ApiReturn(comment.Msg, comment.Data))
+}

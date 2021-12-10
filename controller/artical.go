@@ -15,6 +15,13 @@ func UploadArticle(c *gin.Context) {
 	artcile.Tag = c.Query("tag")
 	artcile.Category = c.Query("category")
 	model.SaveArtical(artcile)
+	c.JSON(http.StatusOK, gin.H{
+		"articleid": artcile.ID,
+		"content":   artcile.Content,
+		"category":  artcile.Category,
+		"tag":       artcile.Tag,
+	})
+	fmt.Println("upload article success")
 } //上传文章
 
 func GetArticleByID(c *gin.Context) {

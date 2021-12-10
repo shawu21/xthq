@@ -7,17 +7,17 @@ type ArticleInfo struct {
 	Tag      string
 }
 
+type ReplyInfo struct {
+	ReplyID        int `gorm:"PRIMARY_KEY;AUTO_INCREMENT"`
+	ReplyCommentId int
+	Content        string
+}
+
 type CommentInfo struct {
 	CommentID      int `gorm:"PRIMARY_KEY;AUTO_INCREMENT"`
 	ReplyArticalId int
 	Content        string
 	Email          string
-}
-
-type ReplyInfo struct {
-	ReplyID        int `gorm:"PRIMARY_KEY;AUTO_INCREMENT"`
-	ReplyCommentId int
-	Content        string
 }
 
 func SaveArtical(Article ArticleInfo) {
