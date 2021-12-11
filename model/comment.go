@@ -51,7 +51,7 @@ func SaveComment(Comment CommentInfo) {
 
 func FindReply(ID int) ReturnType {
 	var replys []ReplyInfo
-	db.Where("ReplyCommentId = ?", ID).Find(&replys)
+	db.Where("reply_comment_id = ?", ID).Find(&replys)
 	return ReturnType{Msg: "查询成功", Data: gin.H{
 		"data": replys,
 	}}
