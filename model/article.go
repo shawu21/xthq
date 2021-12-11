@@ -7,12 +7,6 @@ type ArticleInfo struct {
 	Tag      string
 }
 
-type ReplyInfo struct {
-	ReplyID        int `gorm:"PRIMARY_KEY;AUTO_INCREMENT"`
-	ReplyCommentId int
-	Content        string
-}
-
 type CommentInfo struct {
 	CommentID      int `gorm:"PRIMARY_KEY;AUTO_INCREMENT"`
 	ReplyArticalId int
@@ -27,8 +21,12 @@ func SaveArtical(Article ArticleInfo) {
 
 func FindArtical(ID int) string {
 	var ArtiCal ArticleInfo
-	db.Where("ID = ?", ID).Find(&ArtiCal)
-	return ArtiCal.Content
+	err := db.Where("ID = ?", ID).Find(&ArtiCal).Error
+	if err != nil {
+		return ArtiCal.Content
+	} else {
+		return "查询失败"
+	}
 } //查找数据库里对应ID的文章
 
 func FindArticalIDbyCate(cate string) []ArticleInfo {

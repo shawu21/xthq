@@ -7,3 +7,8 @@ import (
 )
 
 var db *gorm.DB = mySqldb.MySqlDb
+
+type ReturnType struct {
+	Msg  string
+	Data interface{}
+}

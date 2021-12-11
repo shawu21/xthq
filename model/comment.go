@@ -2,11 +2,6 @@ package model
 
 import "github.com/gin-gonic/gin"
 
-type ReturnType struct {
-	Msg  string
-	Data interface{}
-}
-
 func ApiReturn(msg string, data interface{}) gin.H {
 	return gin.H{
 		"message": msg,
@@ -30,12 +25,18 @@ func FindComment(ID int) ReturnType {
 
 func FindCommentByID(ID int) ReturnType {
 	var Comment CommentInfo
-	db.Where("comment_id = ?", ID).Find(&Comment)
+	err := db.Where("comment_id = ?", ID).Find(&Comment).Error
 	rep := FindReply(Comment.CommentID)
-	return ReturnType{Msg: "查询成功", Data: gin.H{
-		"comment": Comment.Content,
-		"reply":   rep.Data,
-	}}
+	if err != nil {
+		return ReturnType{Msg: "查询成功", Data: gin.H{
+			"comment": Comment.Content,
+			"reply":   rep.Data,
+		}}
+	} else {
+		return ReturnType{Msg: "查询失败", Data: gin.H{
+			"error": err,
+		}}
+	}
 }
 
 func FindCommentEmail(ID int) string {
@@ -48,16 +49,3 @@ func SaveComment(Comment CommentInfo) {
 	db.AutoMigrate(&CommentInfo{})
 	db.Create(&Comment)
 } //在数据库里保存评论
-
-func FindReply(ID int) ReturnType {
-	var replys []ReplyInfo
-	db.Where("reply_comment_id = ?", ID).Find(&replys)
-	return ReturnType{Msg: "查询成功", Data: gin.H{
-		"data": replys,
-	}}
-} //返回对应commentid的回复切片
-
-func SaveReply(Reply ReplyInfo) {
-	db.AutoMigrate(&ReplyInfo{})
-	db.Create(&Reply)
-} //在数据库里保存回复
