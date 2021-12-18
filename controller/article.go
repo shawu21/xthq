@@ -2,7 +2,6 @@ package controller
 
 import (
 	"Test/model"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -16,12 +15,10 @@ func UploadArticle(c *gin.Context) {
 	artcile.Category = c.Query("category")
 	model.SaveArtical(artcile)
 	c.JSON(http.StatusOK, gin.H{
-		"articleid": artcile.ID,
-		"content":   artcile.Content,
-		"category":  artcile.Category,
-		"tag":       artcile.Tag,
+		"content":  artcile.Content,
+		"category": artcile.Category,
+		"tag":      artcile.Tag,
 	})
-	fmt.Println("upload article success")
 } //上传文章
 
 func GetArticleByID(c *gin.Context) {
@@ -37,21 +34,11 @@ func GetArticleByID(c *gin.Context) {
 func GetArticleByCategory(c *gin.Context) {
 	cate := c.Query("category")
 	artciles := model.FindArticalIDbyCate(cate)
-	c.JSON(http.StatusOK, gin.H{
-		"these are artcile's id about": cate,
-	})
-	for _, a := range artciles {
-		fmt.Println(a.ID)
-	}
+	c.JSON(http.StatusOK, model.ApiReturn(artciles.Msg, artciles.Data))
 } //通过分类category查询文章，返回文章ID
 
 func GetArticleByTag(c *gin.Context) {
 	tag := c.Query("tag")
 	articles := model.FindArticalIDbytag(tag)
-	c.JSON(http.StatusOK, gin.H{
-		"these are artcile's id about": tag,
-	})
-	for _, a := range articles {
-		fmt.Println(a.ID)
-	}
+	c.JSON(http.StatusOK, model.ApiReturn(articles.Msg, articles.Data))
 } //通过tag查询文章，返回文章ID

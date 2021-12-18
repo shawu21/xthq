@@ -15,7 +15,7 @@ func main() {
 		bGroup.GET("/get/articletag", controller.GetArticleByTag)
 		bGroup.GET("/get/articlecategory", controller.GetArticleByCategory)
 
-		bGroup.GET("/get/comments", controller.GetComment)
+		bGroup.GET("/get/comments", controller.GetComment) //查询
 		bGroup.GET("/get/comment", controller.GetCommentByID)
 
 		bGroup.POST("/post/article", controller.UploadArticle)

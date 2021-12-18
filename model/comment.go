@@ -28,13 +28,13 @@ func FindCommentByID(ID int) ReturnType {
 	err := db.Where("comment_id = ?", ID).Find(&Comment).Error
 	rep := FindReply(Comment.CommentID)
 	if err != nil {
+		return ReturnType{Msg: "查询失败", Data: gin.H{
+			"error": err,
+		}}
+	} else {
 		return ReturnType{Msg: "查询成功", Data: gin.H{
 			"comment": Comment.Content,
 			"reply":   rep.Data,
-		}}
-	} else {
-		return ReturnType{Msg: "查询失败", Data: gin.H{
-			"error": err,
 		}}
 	}
 }

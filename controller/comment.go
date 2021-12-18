@@ -48,6 +48,10 @@ func ReplyComment(c *gin.Context) {
 	email := model.FindCommentEmail(reply.ReplyCommentId)
 	model.SaveReply(reply)
 	go SendEamil(email)
+	c.JSON(http.StatusOK, gin.H{
+		"replycontent": reply.Content,
+		"upload":       "success",
+	})
 } //对评论进行回复，需要指明评论的ID，同时发送邮件告诉对方有人回复
 
 func GetComment(c *gin.Context) {

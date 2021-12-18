@@ -1,5 +1,7 @@
 package model
 
+import "github.com/gin-gonic/gin"
+
 type ArticleInfo struct {
 	ID       int `gorm:"PRIMARY_KEY;AUTO_INCREMENT"`
 	Content  string
@@ -19,24 +21,44 @@ func SaveArtical(Article ArticleInfo) {
 	db.Create(&Article)
 } //在数据库里保存文章
 
-func FindArtical(ID int) string {
+func FindArtical(ID int) ReturnType {
 	var ArtiCal ArticleInfo
 	err := db.Where("ID = ?", ID).Find(&ArtiCal).Error
 	if err != nil {
-		return ArtiCal.Content
+		return ReturnType{Msg: "查询失败", Data: gin.H{
+			"error": err,
+		}}
 	} else {
-		return "查询失败"
+		return ReturnType{Msg: "查询成功", Data: gin.H{
+			"article": ArtiCal,
+		}}
 	}
 } //查找数据库里对应ID的文章
 
-func FindArticalIDbyCate(cate string) []ArticleInfo {
+func FindArticalIDbyCate(cate string) ReturnType {
 	var ArtiCals []ArticleInfo
-	db.Where("Category = ?", cate).Find(&ArtiCals)
-	return ArtiCals
+	err := db.Where("category = ?", cate).Find(&ArtiCals).Error
+	if err != nil {
+		return ReturnType{Msg: "查询失败", Data: gin.H{
+			"error": err,
+		}}
+	} else {
+		return ReturnType{Msg: "查询成功", Data: gin.H{
+			"articals": ArtiCals,
+		}}
+	}
 } //查找数据库里对应category的文章，输出ID
 
-func FindArticalIDbytag(tag string) []ArticleInfo {
+func FindArticalIDbytag(tag string) ReturnType {
 	var ArtiCals []ArticleInfo
-	db.Where("Tag = ?", tag).Find(&ArtiCals)
-	return ArtiCals
+	err := db.Where("tag LIKE ?", "%"+tag+"%").Find(&ArtiCals).Error
+	if err != nil {
+		return ReturnType{Msg: "查询失败", Data: gin.H{
+			"error": err,
+		}}
+	} else {
+		return ReturnType{Msg: "查询成功", Data: gin.H{
+			"articals": ArtiCals,
+		}}
+	}
 } //查找数据库里对应tag的文章，输出ID
