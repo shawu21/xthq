@@ -10,9 +10,9 @@ import (
 
 func UploadArticle(c *gin.Context) {
 	var artcile model.ArticleInfo
-	artcile.Content = c.Query("content")
-	artcile.Tag = c.Query("tag")
-	artcile.Category = c.Query("category")
+	artcile.Content = c.PostForm("content")
+	artcile.Tag = c.PostForm("tag")
+	artcile.Category = c.PostForm("category")
 	model.SaveArtical(artcile)
 	c.JSON(http.StatusOK, gin.H{
 		"content":  artcile.Content,
